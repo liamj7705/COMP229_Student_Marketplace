@@ -1,7 +1,7 @@
 {
-  "name": "student-marketplace-backend",
+  "name": "coltcart-backend",
   "version": "1.0.0",
-  "description": "Backend for the Student Marketplace web app (Express + MongoDB, MVC)",
+  "description": "Backend for the COLTCART web app (Express + MongoDB, MVC)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
