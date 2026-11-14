@@ -4,6 +4,7 @@ const User = require('../models/User');
 const canModify = (req) => req.user.role === 'admin' || req.user._id.toString() === req.params.id;
 
 // GET /api/users  (admin only)
+// check
 exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
