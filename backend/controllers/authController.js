@@ -23,7 +23,7 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ message: 'Name, email and password are required' });
     }
 
-    const exists = await User.findOne({ email });
+    const exists = await User.findOne({ email: String(email).trim().toLowerCase() });
     if (exists) {
       return res.status(400).json({ message: 'Email is already registered' });
     }
@@ -49,7 +49,7 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: String(email).trim().toLowerCase() }).select('+password');
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
