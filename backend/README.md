@@ -1,4 +1,4 @@
-# Student Marketplace – Backend
+# COLTCART – Backend
 
 Express + MongoDB (Mongoose) backend using the MVC structure, with JWT authentication.
 
@@ -44,7 +44,7 @@ Example: `/api/listings?category=textbook&maxPrice=50&search=calculus`
 Protected routes need the header: `Authorization: Bearer <token>`
 
 ## Testing
-Import `Student-Marketplace.postman_collection.json` into Postman. Run the requests top to bottom: **Register** or **Login** first (the token is saved automatically), then **Listings**, then **Users** (the last request deletes the test account).
+Import `COLTCART.postman_collection.json` into Postman. Run the requests top to bottom: **Register** or **Login** first (the token is saved automatically), then **Listings**, then **Users** (the last request deletes the test account).
 
 ## Next steps
 - Confirm `Listing` fields with the Database Programmer

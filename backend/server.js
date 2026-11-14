@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'Student Marketplace API is running' });
+  res.json({ message: 'COLTCART API is running' });
 });
 
 // Routes
