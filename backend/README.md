@@ -12,7 +12,7 @@ Express + MongoDB (Mongoose) backend using the MVC structure, with JWT authentic
 ```
 config/db.js                  MongoDB connection
 models/User.js                User schema (password hashed with bcrypt)
-models/Listing.js             Listing schema (DRAFT – Database Programmer to finalize)
+models/Listing.js             Listing schema (sale / rent / trade / service)
 controllers/authController.js register, login, me
 controllers/userController.js user CRUD
 controllers/listingController.js listing CRUD + filters
@@ -35,11 +35,27 @@ server.js                     app entry point
 | GET | /api/listings | Public | Browse listings (filters below) |
 | GET | /api/listings/my | Logged in | Current user's listings (incl. sold) |
 | GET | /api/listings/:id | Public | One listing |
-| PUT | /api/listings/:id | Seller / Admin | Update listing or mark sold (`{"status":"sold"}`) |
+| PUT | /api/listings/:id | Seller / Admin | Update listing or change status (e.g. `{"status":"rented"}`) |
 | DELETE | /api/listings/:id | Seller / Admin | Delete listing |
 
-**Listing filters:** `category`, `condition`, `status` (default `available`), `minPrice`, `maxPrice`, `search` (title, description, course code, ISBN), `page`, `limit`
-Example: `/api/listings?category=textbook&maxPrice=50&search=calculus`
+**Listing filters:** `listingType`, `category`, `condition`, `status` (default `available`), `minPrice`, `maxPrice`, `search` (title, description, course code, ISBN, tradeFor), `page`, `limit`
+Example: `/api/listings?listingType=rent&category=electronics&maxPrice=20`
+
+## Listing fields
+| Field | Values / rules |
+|---|---|
+| title | Required, max 120 characters |
+| description | Required |
+| listingType | `sale` (default), `rent`, `trade`, `service` |
+| category | `textbook`, `furniture`, `electronics`, `clothing`, `school supplies`, `digital`, `other` (required) |
+| price | CA$, >= 0. Required except for trade (trade is always 0) |
+| priceUnit | `fixed` (default), `hour`, `day`, `week`, `month`. Sale and trade are always `fixed` |
+| tradeFor | Required for trade: what you want in return |
+| condition | `new`, `like new`, `good` (default), `fair` |
+| status | `available` (default). Then sale/service → `sold`, rent → `rented`, trade → `traded` |
+| images, location, isbn, courseCode | Optional |
+
+**Registration:** only Centennial College emails (`@my.centennialcollege.ca` or `@centennialcollege.ca`).
 
 Protected routes need the header: `Authorization: Bearer <token>`
 
@@ -47,5 +63,4 @@ Protected routes need the header: `Authorization: Bearer <token>`
 Import `COLTCART.postman_collection.json` into Postman. Run the requests top to bottom: **Register** or **Login** first (the token is saved automatically), then **Listings**, then **Users** (the last request deletes the test account).
 
 ## Next steps
-- Confirm `Listing` fields with the Database Programmer
 - Share the endpoint table above with the Frontend Developer

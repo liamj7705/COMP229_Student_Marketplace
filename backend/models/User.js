@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
+      // Only Centennial College addresses: @my.centennialcollege.ca (students) or @centennialcollege.ca
+      match: [
+        /^[^\s@]+@(my\.)?centennialcollege\.ca$/,
+        'Please use your Centennial College email (@my.centennialcollege.ca)',
+      ],
     },
     password: {
       type: String,

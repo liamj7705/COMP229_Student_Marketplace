@@ -2,8 +2,8 @@ const Listing = require('../models/Listing');
 
 // Fields a user is allowed to set on a listing (seller is always taken from the token)
 const ALLOWED_FIELDS = [
-  'title', 'description', 'category', 'price', 'condition',
-  'images', 'location', 'status', 'isbn', 'courseCode',
+  'title', 'description', 'listingType', 'category', 'price', 'priceUnit', 'tradeFor',
+  'condition', 'images', 'location', 'status', 'isbn', 'courseCode',
 ];
 
 const pickAllowed = (body) =>
@@ -32,15 +32,16 @@ exports.createListing = async (req, res, next) => {
 };
 
 // GET /api/listings  (public)
-// Filters: ?category=textbook&condition=good&status=available&minPrice=10&maxPrice=50&search=calculus&page=1&limit=20
+// Filters: ?listingType=rent&category=textbook&condition=good&status=available&minPrice=10&maxPrice=50&search=calculus&page=1&limit=20
 exports.getListings = async (req, res, next) => {
   try {
     // String() stops query-object injection like ?category[$ne]=x
     const q = (key) => (req.query[key] !== undefined ? String(req.query[key]) : undefined);
-    const [category, condition, status, minPrice, maxPrice, search] =
-      ['category', 'condition', 'status', 'minPrice', 'maxPrice', 'search'].map(q);
+    const [listingType, category, condition, status, minPrice, maxPrice, search] =
+      ['listingType', 'category', 'condition', 'status', 'minPrice', 'maxPrice', 'search'].map(q);
     const filter = {};
 
+    if (listingType) filter.listingType = listingType;
     if (category) filter.category = category;
     if (condition) filter.condition = condition;
     filter.status = status || 'available'; // show available items by default
@@ -54,7 +55,7 @@ exports.getListings = async (req, res, next) => {
     if (search) {
       // escape special regex characters so user input is treated as plain text
       const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-      filter.$or = [{ title: regex }, { description: regex }, { courseCode: regex }, { isbn: regex }];
+      filter.$or = [{ title: regex }, { description: regex }, { courseCode: regex }, { isbn: regex }, { tradeFor: regex }];
     }
 
     const page = Math.max(parseInt(req.query.page, 10) || 1, 1);

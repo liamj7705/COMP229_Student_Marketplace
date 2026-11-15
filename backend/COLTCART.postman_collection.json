@@ -19,6 +19,14 @@
     {
       "key": "listingId",
       "value": ""
+    },
+    {
+      "key": "rentId",
+      "value": ""
+    },
+    {
+      "key": "tradeId",
+      "value": ""
     }
   ],
   "item": [
@@ -48,7 +56,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Ayesha Khan\",\n  \"email\": \"ayesha@student.ca\",\n  \"password\": \"secret123\",\n  \"program\": \"Computer Programming\"\n}"
+              "raw": "{\n  \"name\": \"Ayesha Khan\",\n  \"email\": \"ayesha@my.centennialcollege.ca\",\n  \"password\": \"secret123\",\n  \"program\": \"Computer Programming\"\n}"
             }
           },
           "event": [
@@ -63,6 +71,33 @@
               }
             }
           ]
+        },
+        {
+          "name": "Register - non-Centennial email (expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@gmail.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          }
         },
         {
           "name": "Login",
@@ -87,7 +122,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"ayesha@student.ca\",\n  \"password\": \"secret123\"\n}"
+              "raw": "{\n  \"email\": \"ayesha@my.centennialcollege.ca\",\n  \"password\": \"secret123\"\n}"
             }
           },
           "event": [
@@ -126,7 +161,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"ayesha@student.ca\",\n  \"password\": \"wrong\"\n}"
+              "raw": "{\n  \"email\": \"ayesha@my.centennialcollege.ca\",\n  \"password\": \"wrong\"\n}"
             }
           }
         },
@@ -186,7 +221,7 @@
       "name": "Listings",
       "item": [
         {
-          "name": "Create listing (textbook)",
+          "name": "Create listing (sale - textbook)",
           "request": {
             "method": "POST",
             "header": [
@@ -211,7 +246,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Calculus: Early Transcendentals 8th Ed\",\n  \"description\": \"Some highlighting, otherwise great\",\n  \"category\": \"textbook\",\n  \"price\": 45,\n  \"condition\": \"good\",\n  \"location\": \"Main campus library\",\n  \"courseCode\": \"MATH101\",\n  \"isbn\": \"9781285741550\"\n}"
+              "raw": "{\n  \"title\": \"Calculus: Early Transcendentals 8th Ed\",\n  \"description\": \"Some highlighting, otherwise great\",\n  \"listingType\": \"sale\",\n  \"category\": \"textbook\",\n  \"price\": 45,\n  \"condition\": \"like new\",\n  \"location\": \"Progress Campus library\",\n  \"courseCode\": \"MATH101\",\n  \"isbn\": \"9781285741550\"\n}"
             }
           },
           "event": [
@@ -227,7 +262,7 @@
           ]
         },
         {
-          "name": "Create listing (furniture)",
+          "name": "Create listing (sale - furniture)",
           "request": {
             "method": "POST",
             "header": [
@@ -252,7 +287,179 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"IKEA study desk\",\n  \"category\": \"furniture\",\n  \"price\": 30,\n  \"condition\": \"fair\",\n  \"location\": \"Residence pickup\"\n}"
+              "raw": "{\n  \"title\": \"IKEA study desk\",\n  \"description\": \"Sturdy desk, small scratch on top\",\n  \"listingType\": \"sale\",\n  \"category\": \"furniture\",\n  \"price\": 30,\n  \"condition\": \"fair\",\n  \"location\": \"Residence pickup\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create listing (rent - calculator per week)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"TI-84 Plus graphing calculator\",\n  \"description\": \"Available for rent during exam season\",\n  \"listingType\": \"rent\",\n  \"category\": \"electronics\",\n  \"price\": 10,\n  \"priceUnit\": \"week\",\n  \"condition\": \"good\",\n  \"location\": \"Progress Campus\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const r = pm.response.json();",
+                  "if (r._id) pm.collectionVariables.set('rentId', r._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create listing (trade)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"COMP 213 textbook\",\n  \"description\": \"Looking to swap for a COMP 229 book\",\n  \"listingType\": \"trade\",\n  \"category\": \"textbook\",\n  \"tradeFor\": \"COMP 229 web development textbook\",\n  \"condition\": \"like new\",\n  \"location\": \"Morningside Campus\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const r = pm.response.json();",
+                  "if (r._id) pm.collectionVariables.set('tradeId', r._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create listing (service - tutoring per hour)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"JavaScript tutoring\",\n  \"description\": \"Help with COMP 229 assignments and React\",\n  \"listingType\": \"service\",\n  \"category\": \"other\",\n  \"price\": 25,\n  \"priceUnit\": \"hour\",\n  \"location\": \"Online\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create listing - trade without tradeFor (expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Desk lamp\",\n  \"description\": \"Want to trade\",\n  \"listingType\": \"trade\",\n  \"category\": \"furniture\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Create listing - invalid listingType (expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lamp\",\n  \"description\": \"Test\",\n  \"listingType\": \"auction\",\n  \"category\": \"furniture\",\n  \"price\": 5\n}"
             }
           }
         },
@@ -371,6 +578,34 @@
           }
         },
         {
+          "name": "Get listings - rent only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings?listingType=rent",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ],
+              "query": [
+                {
+                  "key": "listingType",
+                  "value": "rent"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Get my listings",
           "request": {
             "method": "GET",
@@ -474,6 +709,99 @@
                 "api",
                 "listings",
                 "{{listingId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"sold\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mark rent listing as rented",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings/{{rentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings",
+                "{{rentId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rented\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mark trade listing as traded",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings/{{tradeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings",
+                "{{tradeId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"traded\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mark rent listing as sold - wrong status (expect 400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/listings/{{rentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "listings",
+                "{{rentId}}"
               ]
             },
             "body": {
